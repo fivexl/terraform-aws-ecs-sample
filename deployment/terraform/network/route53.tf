@@ -1,7 +1,7 @@
 resource "aws_route53_record" "ecs_sample" {
   provider = aws.dns
   zone_id  = data.aws_route53_zone.primary.zone_id
-  name     = "${var.services.frontend.domain_name}.${data.aws_route53_zone.primary.name}"
+  name     = "${var.services.web.domain_name}.${data.aws_route53_zone.primary.name}"
   type     = "A"
   alias {
     evaluate_target_health = true

@@ -79,7 +79,7 @@ module "ingress_alb" {
   target_groups = {
     (var.name) = {
       protocol             = "HTTP"
-      port                 = var.services.frontend.port
+      port                 = var.services.web.port
       target_type          = "ip"
       deregistration_delay = 10
       create_attachment    = false # created by ECS service
@@ -87,7 +87,7 @@ module "ingress_alb" {
       health_check = {
         enabled             = true
         interval            = 5
-        path                = var.services.frontend.health_check_path
+        path                = var.services.web.health_check_path
         port                = "traffic-port"
         healthy_threshold   = 3
         unhealthy_threshold = 3
@@ -97,14 +97,4 @@ module "ingress_alb" {
       }
     }
   }
-}
-
-moved {
-  from = module.network.module.alb_ingress_rules.aws_lb_target_group.this["ecs-sample"]
-  to   = module.network.module.ingress_alb.aws_lb_target_group.this["ecs-sample"]
-}
-
-moved {
-  from = module.network.module.alb_ingress_rules.aws_lb_listener_rule.this_single_target["ecs-sample.fivexl.dev"]
-  to   = module.network.module.ingress_alb.aws_lb_listener_rule.this["https/ecs-sample"]
 }
