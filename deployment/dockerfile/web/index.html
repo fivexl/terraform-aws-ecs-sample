@@ -10,9 +10,9 @@
 </head>
 <style media="screen">
   body {
-          background-color: #4c724c;
+          background-color: #e1ece1;
           font-size: 50pt;
-          color: white;
+          color: rgb(35, 34, 34);
     }
 </style>
 <body>
@@ -20,18 +20,26 @@
       <div id="one" class="text-center">
         <span>"Whats my url?"</span>
       </div>
+      <div class="text-center">
+        <iframe id="main" src="init.jpg" height="600" width="600">What will it be?</iframe>
+      </div>
       <div class="row">
         <div class="col-md-6 text-center">
-          <a href="http://cats.ecs-sample:80"><img src="https://ecs-demogo-pictures.s3.ap-northeast-2.amazonaws.com/web/web/img/ilovecats.jpg" width="400" height="400" alt="..." class="img-rounded"></a>
+          <button onclick="LoadCats()">Cats!</button>
         </div>
         <div class="col-md-6 text-center">
-          <a href="http://dogs.ecs-sample:80"><img src="https://ecs-demogo-pictures.s3.ap-northeast-2.amazonaws.com/web/web/img/ilovedogs.jpg" width="400" height="400" alt="..." class="img-rounded"></a>
+          <button onclick="LoadDogs()">Dogs!</button>
         </div>
       </div>
     </div>
 <script>
-    $('#one span').text(window.location.href);
+  function LoadCats() {
+    document.getElementById("main").src = "cats/";
+  }
+  function LoadDogs() {
+    document.getElementById("main").src = "dogs/";
+  }
+  $('#one span').text(window.location.href);
 </script>
-<iframe src="http://dogs.ecs-sample:80" name="test" height="120" width="600">You need a Frames Capable browser to view this content.</iframe> 
 </body>
 </html>
