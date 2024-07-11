@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  web:
+    image: 471112922998.dkr.ecr.eu-central-1.amazonaws.com/ecs-sample-web:0.1
+    build: ./web
+    ports:
+      - "8080:80"
+    networks:
+      default:
+        aliases:
+          - web.ecs-sample
+  cats:
+    image: 471112922998.dkr.ecr.eu-central-1.amazonaws.com/ecs-sample-cats:0.1
+    build: ./cats
+    ports:
+      - "8081:80"
+    networks:
+      default:
+        aliases:
+          - cats.ecs-sample
+  dogs:
+    image: 471112922998.dkr.ecr.eu-central-1.amazonaws.com/ecs-sample-dogs:0.1
+    build: ./dogs
+    ports:
+      - "8082:80"
+    networks:
+      default:
+        aliases:
+          - dogs.ecs-sample
