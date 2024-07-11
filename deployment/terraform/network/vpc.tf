@@ -11,7 +11,7 @@ module "vpc" {
   database_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 8)]
 
   create_database_subnet_group  = true
-  manage_default_network_acl    = true
+  manage_default_network_acl    = false
   manage_default_route_table    = true
   manage_default_security_group = true
 
