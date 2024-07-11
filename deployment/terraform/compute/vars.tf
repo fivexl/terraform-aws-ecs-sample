@@ -6,6 +6,10 @@ variable "service_discovery_namespace_arn" {
   type = string
 }
 
+variable "service_discovery_namespace_id" {
+  type = string
+}
+
 variable "access_logs_bucket_id" {
   type = string
 }

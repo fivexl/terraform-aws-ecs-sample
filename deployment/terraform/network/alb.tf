@@ -7,6 +7,7 @@ module "ingress_alb" {
   subnets            = module.vpc.public_subnets
 
   create_security_group = true
+  security_group_name   = "alb"
   security_group_ingress_rules = {
     all_http = {
       from_port   = local.alb_http_port

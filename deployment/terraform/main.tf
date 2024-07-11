@@ -24,6 +24,7 @@ module "compute" {
   name                            = local.name
   services                        = local.services
   service_discovery_namespace_arn = module.network.service_discovery_namespace_arn
+  service_discovery_namespace_id  = module.network.service_discovery_namespace_id
   private_subnets                 = module.network.private_subnets
   alb_sg_id                       = module.network.alb_sg_id
   alb_target_group_arn            = module.network.alb_target_group_arn

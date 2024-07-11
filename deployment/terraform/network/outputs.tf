@@ -17,3 +17,7 @@ output "alb_sg_id" {
 output "alb_target_group_arn" {
   value = module.ingress_alb.target_groups[var.name].arn
 }
+
+output "service_discovery_namespace_id" {
+  value = aws_service_discovery_private_dns_namespace.ecs_sample.id
+}
