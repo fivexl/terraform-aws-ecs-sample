@@ -57,25 +57,54 @@ module "ingress_alb" {
         message_body = "Unknown host"
         status_code  = "503"
       }
+
+      rules = {
+        (var.name) = {
+          priority = 1
+          actions = [{
+            type             = "forward"
+            target_group_key = var.name
+          }]
+
+          conditions = [{
+            host_header = {
+              values = [aws_route53_record.ecs_sample.name]
+            }
+          }]
+        }
+      }
+    }
+  }
+
+  target_groups = {
+    (var.name) = {
+      protocol             = "HTTP"
+      port                 = var.services.frontend.port
+      target_type          = "ip"
+      deregistration_delay = 10
+      create_attachment    = false # created by ECS service
+
+      health_check = {
+        enabled             = true
+        interval            = 5
+        path                = var.services.frontend.health_check_path
+        port                = "traffic-port"
+        healthy_threshold   = 3
+        unhealthy_threshold = 3
+        timeout             = 2
+        protocol            = "HTTP"
+        matcher             = "200-399"
+      }
     }
   }
 }
 
-module "alb_ingress_rules" {
+moved {
+  from = module.network.module.alb_ingress_rules.aws_lb_target_group.this["ecs-sample"]
+  to   = module.network.module.ingress_alb.aws_lb_target_group.this["ecs-sample"]
+}
 
-  source  = "fivexl/alb-ingress-rules/aws"
-  version = "1.0.0"
-
-  lb_listener_arn = module.ingress_alb.listeners["https"].arn
-
-  domain_names      = [aws_route53_record.ecs_sample.fqdn]
-  ingress_port      = var.services.frontend.port
-  protocol          = "HTTP"
-  health_check_path = var.services.frontend.health_check_path
-
-  target_groups_map = {
-    "${var.name}" = 100
-  }
-
-  vpc_id = module.vpc.vpc_id
+moved {
+  from = module.network.module.alb_ingress_rules.aws_lb_listener_rule.this_single_target["ecs-sample.fivexl.dev"]
+  to   = module.network.module.ingress_alb.aws_lb_listener_rule.this["https/ecs-sample"]
 }

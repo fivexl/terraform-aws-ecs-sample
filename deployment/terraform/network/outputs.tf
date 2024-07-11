@@ -15,5 +15,5 @@ output "alb_sg_id" {
 }
 
 output "alb_target_group_arn" {
-  value = module.alb_ingress_rules.lb_target_group_arns[var.name]
+  value = module.ingress_alb.target_groups[var.name].arn
 }
