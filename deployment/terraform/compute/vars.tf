@@ -29,3 +29,8 @@ variable "alb_sg_id" {
 variable "alb_target_group_arn" {
   type = string
 }
+
+variable "enable_service_connect" {
+  type    = bool
+  default = true
+}

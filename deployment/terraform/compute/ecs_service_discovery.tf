@@ -1,5 +1,5 @@
 resource "aws_service_discovery_service" "ecs_sample" {
-  for_each = var.services
+  for_each = var.enable_service_connect ? toset([]) : toset(keys(var.services))
 
   name        = each.key
   description = "ECS Service Discovery for ${each.key} service"
@@ -14,4 +14,6 @@ resource "aws_service_discovery_service" "ecs_sample" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  force_destroy = true
 }

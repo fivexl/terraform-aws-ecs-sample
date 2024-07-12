@@ -24,6 +24,7 @@ module "ecs_service" {
           containerPort = each.value.port
           hostPort      = each.value.port
           protocol      = "tcp"
+          appProtocol   = "http"
         }
       ]
       readonly_root_filesystem  = false # nginx need to write tmp files
@@ -33,10 +34,34 @@ module "ecs_service" {
       }
     }
   }
+  /*
+   issuer_cert_authority {
+                aws_pca_authority_arn = data.aws_ram_resource_share.pca[0].resource_arns[0]
+              }
+              role_arn = data.aws_iam_role.tls[0].arn
+            }*/
+  service_connect_configuration = {
+    enabled   = var.enable_service_connect
+    namespace = var.service_discovery_namespace_arn
+    log_configuration = {
+      log_driver = "awslogs"
+      options = {
+        awslogs-region        = data.aws_region.current.name
+        awslogs-group         = "/aws/ecs/${each.key}/app"
+        awslogs-stream-prefix = "/ecs-connect"
+      }
+    }
+    service = {
+      client_alias = {
+        port     = each.value.port
+        dns_name = "${each.key}.${var.name}"
+      }
+      port_name      = local.app_container_name
+      discovery_name = each.key
+    }
+  }
 
-  service_connect_configuration = {}
-
-  service_registries = {
+  service_registries = var.enable_service_connect ? {} : {
     registry_arn = aws_service_discovery_service.ecs_sample[each.key].arn
   }
 
@@ -58,6 +83,8 @@ module "ecs_service" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
+
+  wait_for_steady_state = true
 }
 
 resource "aws_security_group_rule" "ingress" {
