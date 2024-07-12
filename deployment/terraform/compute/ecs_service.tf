@@ -118,3 +118,14 @@ resource "aws_security_group_rule" "alb" {
   security_group_id        = module.ecs_service[each.key].security_group_id
   source_security_group_id = var.alb_sg_id
 }
+
+resource "aws_security_group_rule" "tls_tester" {
+  for_each                 = var.services
+  type                     = "ingress"
+  description              = "tls_tester"
+  from_port                = each.value.port
+  to_port                  = each.value.port
+  protocol                 = "tcp"
+  security_group_id        = module.ecs_service[each.key].security_group_id
+  source_security_group_id = var.tls_tester_security_group_id
+}

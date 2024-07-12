@@ -14,6 +14,10 @@ variable "access_logs_bucket_id" {
   type = string
 }
 
+variable "tls_tester_security_group_id" {
+  type = string
+}
+
 variable "services" {
   type = any
 }

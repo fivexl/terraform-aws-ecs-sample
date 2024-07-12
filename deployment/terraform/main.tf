@@ -28,6 +28,7 @@ module "compute" {
   private_subnets                 = module.network.private_subnets
   alb_sg_id                       = module.network.alb_sg_id
   alb_target_group_arn            = module.network.alb_target_group_arn
+  tls_tester_security_group_id    = module.network.tls_tester_security_group_id
   access_logs_bucket_id           = data.aws_s3_bucket.access_logs.id
 }
 

@@ -21,3 +21,7 @@ output "alb_target_group_arn" {
 output "service_discovery_namespace_id" {
   value = aws_service_discovery_private_dns_namespace.ecs_sample.id
 }
+
+output "tls_tester_security_group_id" {
+  value = module.tls_tester.security_group_id
+}
