@@ -17,7 +17,8 @@ module "ecs_service" {
   container_definitions = {
     (local.app_container_name) = {
       essential = true
-      image     = "${aws_ecr_repository.repo[each.key].repository_url}:${each.value.version}"
+      # image     = "${aws_ecr_repository.repo[each.key].repository_url}:${each.value.version}"
+      image = "471112922998.dkr.ecr.eu-central-1.amazonaws.com/nginx:latest"
       port_mappings = [
         {
           name          = local.app_container_name
@@ -29,9 +30,18 @@ module "ecs_service" {
       ]
       readonly_root_filesystem  = false # nginx need to write tmp files
       enable_cloudwatch_logging = true
+      # health_check = {
+      #   command = ["CMD", "lprobe", "-port=${each.value.port}", "-endpoint=${each.value.health_check_path}"]
+      # }
+
       health_check = {
-        command = ["CMD", "lprobe", "-port=${each.value.port}", "-endpoint=${each.value.health_check_path}"]
+        command     = ["CMD-SHELL", "curl -f http://localhost:${each.value.port}/ || exit 1"]
+        interval    = 30
+        timeout     = 5
+        retries     = 3
+        startPeriod = 10
       }
+
     }
   }
   /*
