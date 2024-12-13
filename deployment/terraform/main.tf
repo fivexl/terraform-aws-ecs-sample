@@ -1,3 +1,12 @@
+# first apply requires:
+# 1. terraform apply -target module.network.module.vpc (igv not created...)
+# 2. terraform apply -target module.network.aws_acm_certificate.ecs_sample 
+# (
+# network/route53.tf line 16, in resource "aws_route53_record" "ecs_sample_cert_dv"
+# The "for_each" map includes keys derived from resource attributes that cannot be determined until apply
+# )
+# 3. terraform apply
+
 module "network" {
   source = "./network"
 
