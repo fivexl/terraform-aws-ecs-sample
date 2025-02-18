@@ -11,10 +11,6 @@ variable "vpc" {
   })
 }
 
-variable "vpn_sg_id" {
-  type = string
-}
-
 variable "vpc_id" {
   description = "The VPC ID"
   type        = string
@@ -48,12 +44,6 @@ variable "tags" {
     prefix           = string
     data_owner       = string
   })
-}
-
-variable "additional_alb_hosts" {
-  description = "Additional hosts to add to the ALB"
-  type        = list(string)
-  default     = []
 }
 
 variable "primary_region" {

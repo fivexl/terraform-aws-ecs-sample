@@ -13,7 +13,7 @@ module "ecs_service" {
   enable_execute_command = true
 
   container_definitions = {
-    "app" = {
+    "${each.key}" = {
       essential = true
       image = var.ecr_image_uri != "" ? var.ecr_image_uri : "${var.aws_ecr_repository_url != "" ? var.aws_ecr_repository_url : aws_ecr_repository.this[each.key].repository_url}:${each.value.image_version}"      
       readonly_root_filesystem  = true

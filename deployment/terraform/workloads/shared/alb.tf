@@ -33,7 +33,7 @@ module "ingress_alb" {
   security_group_egress_rules = {
     all = {
       ip_protocol = "-1"
-      cidr_ipv4   = var.vpc.cidr
+      cidr_ipv4   = var.vpc.cidr # TODO: data.aws_vpc.selected.cidr_block
     }
   }
 
@@ -75,11 +75,7 @@ module "ingress_alb" {
           }]
           conditions = [{
             host_header = {
-              values = concat([
-                aws_route53_record.services.name,
-              ],
-              var.additional_alb_hosts
-              )
+              values = [ aws_route53_record.services.name ]
             }
           }]
         }
