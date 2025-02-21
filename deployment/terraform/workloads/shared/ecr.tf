@@ -72,6 +72,7 @@ resource "aws_ecr_repository_policy" "allow_stage_and_prod" {
           "ecr:BatchCheckLayerAvailability"
         ],
         Principal = {
+          # TODO: share with organization
           AWS = [
             for account_id in var.allow_ecr_get_for_account_ids : "arn:aws:iam::${account_id}:root"
           ]
