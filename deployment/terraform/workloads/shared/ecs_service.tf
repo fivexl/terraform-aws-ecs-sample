@@ -7,8 +7,8 @@ module "ecs_service" {
   name        = each.key
   cluster_arn = module.ecs_cluster.cluster_arn
 
-  cpu    = 512
-  memory = 1024
+  cpu    = 256
+  memory = 512
 
   enable_execute_command = true
 
