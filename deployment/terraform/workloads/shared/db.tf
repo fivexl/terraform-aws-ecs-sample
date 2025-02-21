@@ -101,7 +101,7 @@ resource "aws_ssm_parameter" "db" {
   }
 
   name        = each.key
-  description = "Kuvio db parameters"
+  description = "DB parameter for ${local.rds.identifier}"
   type        = "SecureString"
   value       = each.value
   tags        = var.tags
