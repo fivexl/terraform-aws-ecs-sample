@@ -63,6 +63,7 @@ module "ecs_service" {
 
   task_exec_iam_statements = [
     {
+      # Allow ECS to decrypt secrets
       effect = "Allow"
       actions = [
         "kms:Decrypt",
