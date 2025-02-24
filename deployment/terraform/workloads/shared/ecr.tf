@@ -1,6 +1,6 @@
 #tfsec:ignore:AWS078 #tfsec:ignore:AWS093
 resource "aws_ecr_repository" "this" {
-  for_each = var.create_ecr_resources ? local.services : {}
+  for_each = var.create_ecr_resources ? local.services : tomap({})
 
   name = each.key
   image_scanning_configuration {

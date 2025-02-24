@@ -15,7 +15,13 @@ module "ecs_service" {
   container_definitions = {
     "${each.key}" = {
       essential = true
-      image = var.ecr_image_uri != "" ? var.ecr_image_uri : "${var.aws_ecr_repository_url != "" ? var.aws_ecr_repository_url : aws_ecr_repository.this[each.key].repository_url}:${each.value.image_version}"      
+      image = "${(
+        var.create_ecr_resources ? 
+        "${aws_ecr_repository.this[each.key].repository_url}"
+        : "${var.dev_account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${each.key}"
+      )}:${each.value.image_version}"
+
+
       readonly_root_filesystem  = true
 
       # usefull when you need to apply changes when application is broken
@@ -95,7 +101,7 @@ module "ecs_service" {
     }
   }
 
-  wait_for_steady_state = true
+  depends_on = [ module.ingress_alb ]
 }
 
 resource "aws_security_group_rule" "ingress" {

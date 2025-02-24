@@ -23,11 +23,10 @@ module "workloads" {
   allow_ecr_get_for_account_ids = []
   vpc_id                        = "vpc-0618018ee2bdea049"
   dns_zone_name                 = "fivexl.dev"
-  ecr_image_uri                 = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/nginx:latest"
-
+  ecr_image_version             = "after"
+  create_ecr_resources = true
   vpc = {
     name = "apps"
-    cidr = "10.112.0.0/16"
   }
 
   db = {

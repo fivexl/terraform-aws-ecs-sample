@@ -5,6 +5,7 @@ locals {
 module "ingress_alb" {
   source             = "terraform-aws-modules/alb/aws"
   version            = "9.9.0"
+
   name               = "services"
   internal           = true
   load_balancer_type = "application"
@@ -33,7 +34,7 @@ module "ingress_alb" {
   security_group_egress_rules = {
     all = {
       ip_protocol = "-1"
-      cidr_ipv4   = var.vpc.cidr # TODO: data.aws_vpc.selected.cidr_block
+      cidr_ipv4   = data.aws_vpc.this.cidr_block
     }
   }
 
@@ -75,15 +76,16 @@ module "ingress_alb" {
           }]
           conditions = [{
             host_header = {
-              values = [ aws_route53_record.services.name ]
+              values = [ aws_route53_record.services[key].name ]
             }
           }]
-        }
+        } if try(value.domain_name, "") != ""
       }
     }
   }
 
-  target_groups = {
+  target_groups = { 
+    # { for key, value in local.services : key => value if try(value.domain_name, "") != "" }
     for key, value in local.services : key => {
       name                 = key
       protocol             = "HTTP"
@@ -103,6 +105,6 @@ module "ingress_alb" {
         protocol            = "HTTP"
         matcher             = "200-399"
       }
-    }
+    } if try(value.domain_name, "") != ""
   }
 }

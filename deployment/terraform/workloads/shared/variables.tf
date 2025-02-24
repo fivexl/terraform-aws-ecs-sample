@@ -7,7 +7,6 @@ variable "vpc" {
   description = "VPC configuration"
   type = object({
     name               = string
-    cidr               = string
   })
 }
 
@@ -70,26 +69,14 @@ variable "allow_ecr_get_for_account_ids" {
   default     = []
 }
 
-variable "aws_ecr_repository_url" {
-  description = "The URL of the ECR repository, used to pull the image from the ecr, intended to be used only in prod/stage, dev can pull it from resource."
-  default     = ""
-  type        = string
-}
-
 variable "ecr_image_version" {
   description = "The version of the image to use in the ECS service, by default it will use latest commit hash"
   type        = string
   default     = ""
 }
 
-variable "wait_for_steady_state" {
-  description = "Wait for the service to reach a steady state before continuing with the next step"
-  type        = bool
-  default     = true
-}
-
-variable "ecr_image_uri" {
-  description = "This variable temporary solution to use exact image URI in ECS service, cause currently builded image is failing"
+variable "dev_account_id" {
+  description = "The account ID of the development account"
   type        = string
   default     = ""
 }
