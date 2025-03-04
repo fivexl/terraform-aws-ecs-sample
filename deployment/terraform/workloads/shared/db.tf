@@ -86,7 +86,7 @@ module "database_security_group" {
         from_port                = 5432
         to_port                  = 5432
         protocol                 = "tcp"
-        description              = "PostgreSQL access from ${key} service"
+        description              = "ECS: ${key} service access to RDS: ${local.rds.identifier}"
         source_security_group_id = module.ecs_service[key].security_group_id
       } if try(value.enable_db_access, false)
   ]
