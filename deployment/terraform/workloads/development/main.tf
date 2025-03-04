@@ -56,15 +56,3 @@ module "workloads" {
   primary_region   = "us-east-1"
   secondary_region = "eu-west-1"
 }
-
-# ou_info 0.0.6 upadte
-# check regions
-# cpu, mem, per service owerwrite
-
-# dev_account_id -> ecr account id
-
-
-# telemetry - adot?
-# issue - RDS cert
-
-# alb auth
