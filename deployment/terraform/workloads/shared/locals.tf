@@ -3,7 +3,7 @@ locals {
     result = {
       domain_name       = "result"
       port              = 8080
-      health_check_path = "/hello"
+      health_check_path = "/health"
       ingress_from      = []
       priority          = 1
 
@@ -14,11 +14,15 @@ locals {
         DB_NAME     = aws_ssm_parameter.db["/infrastructure/db/${local.rds.identifier}/DB_NAME"].arn
         DB_PASSWORD = "${module.db.db_instance_master_user_secret_arn}:password::"
         DB_USER     = "${module.db.db_instance_master_user_secret_arn}:username::"
+
+        REDIS_HOST  = aws_ssm_parameter.elasticache["/infrastructure/elasticache/${local.elasticache.identifier}/HOST"].arn
       }
 
       environment = {
         PGSSLMODE = "require"
         DB_PORT   = 5432
+
+        NODE_TLS_REJECT_UNAUTHORIZED = "0"
       }
 
       tasks_iam_role_statements = []
@@ -27,7 +31,7 @@ locals {
     worker = {
       # domain_name       = "worker"
       port              = 8080
-      health_check_path = "/hello"
+      health_check_path = "/health"
       ingress_from      = []
       priority          = 2
 
@@ -38,11 +42,19 @@ locals {
         DB_NAME     = aws_ssm_parameter.db["/infrastructure/db/${local.rds.identifier}/DB_NAME"].arn
         DB_PASSWORD = "${module.db.db_instance_master_user_secret_arn}:password::"
         DB_USER     = "${module.db.db_instance_master_user_secret_arn}:username::"
+
+        REDIS_HOST  = aws_ssm_parameter.elasticache["/infrastructure/elasticache/${local.elasticache.identifier}/HOST"].arn
       }
 
       environment = {
         PGSSLMODE = "require"
         DB_PORT   = 5432
+
+        NODE_TLS_REJECT_UNAUTHORIZED = "0"
+
+        # Disable diagnostics
+        # Fixes: Failed to create CoreCLR, HRESULT: "0x8007000E" (OOM)
+        COMPlus_EnableDiagnostics=0
       }
 
       tasks_iam_role_statements = []
@@ -51,7 +63,7 @@ locals {
     vote = {
       domain_name       = "vote"
       port              = 8080
-      health_check_path = "/hello"
+      health_check_path = "/health"
       ingress_from      = []
       priority          = 3
 
@@ -61,6 +73,8 @@ locals {
         DB_NAME     = aws_ssm_parameter.db["/infrastructure/db/${local.rds.identifier}/DB_NAME"].arn
         DB_PASSWORD = "${module.db.db_instance_master_user_secret_arn}:password::"
         DB_USER     = "${module.db.db_instance_master_user_secret_arn}:username::"
+
+        REDIS_HOST  = aws_ssm_parameter.elasticache["/infrastructure/elasticache/${local.elasticache.identifier}/HOST"].arn
       }
 
       environment = {

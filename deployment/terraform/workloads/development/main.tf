@@ -23,7 +23,7 @@ module "workloads" {
   allow_ecr_get_for_account_ids = []
   vpc_id                        = "vpc-0618018ee2bdea049"
   dns_zone_name                 = "fivexl.dev"
-  ecr_image_version             = "after"
+  ecr_image_version             = "v0.13"
   create_ecr_resources = true
   vpc = {
     name = "apps"
@@ -57,3 +57,14 @@ module "workloads" {
   secondary_region = "eu-west-1"
 }
 
+# ou_info 0.0.6 upadte
+# check regions
+# cpu, mem, per service owerwrite
+
+# dev_account_id -> ecr account id
+
+
+# telemetry - adot?
+# issue - RDS cert
+
+# alb auth

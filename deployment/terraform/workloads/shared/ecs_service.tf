@@ -22,7 +22,7 @@ module "ecs_service" {
       )}:${each.value.image_version}"
 
 
-      readonly_root_filesystem  = true
+      readonly_root_filesystem  = false # TODO: necessary only for the
 
       # usefull when you need to apply changes when application is broken
       # wait_for_steady_state     = false
@@ -101,7 +101,7 @@ module "ecs_service" {
     }
   }
 
-  depends_on = [ module.ingress_alb ]
+  # depends_on = [ module.ingress_alb ]
 }
 
 resource "aws_security_group_rule" "ingress" {
@@ -135,3 +135,12 @@ resource "aws_security_group_rule" "alb" {
   security_group_id        = module.ecs_service[each.key].security_group_id
   source_security_group_id = module.ingress_alb.security_group_id
 }
+# https://n8n.io/
+# https://www.langflow.org/
+
+
+# https://vote.fivexl.dev/
+
+# https://result.fivexl.dev/
+
+
