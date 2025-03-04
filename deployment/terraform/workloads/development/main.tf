@@ -29,6 +29,15 @@ module "workloads" {
     name = "apps"
   }
 
+  ecs_services_config = {
+    "result" = {
+      max_capacity = 10
+      min_capacity = 1
+      desired_count = 1
+      autoscaling_target = 60
+    }
+  }
+
   db = {
     engine_version                        = "16.3"
     instance_class                        = "db.t4g.micro"

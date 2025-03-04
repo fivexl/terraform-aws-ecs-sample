@@ -80,3 +80,9 @@ variable "ecr_account_id" {
   type        = string
   default     = ""
 }
+
+variable "ecs_services_config" {
+  description = "Configuration for each ECS service"
+  type = map
+  default = {}
+}

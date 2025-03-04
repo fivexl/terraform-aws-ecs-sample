@@ -7,8 +7,34 @@ module "ecs_service" {
   name        = each.key
   cluster_arn = module.ecs_cluster.cluster_arn
 
-  cpu    = 256
-  memory = 512
+  cpu    = try(var.ecs_services_config[each.key].cpu, 256)
+  memory = try(var.ecs_services_config[each.key].memory, 512)
+  desired_count = try(var.ecs_services_config[each.key].desired_count, 1)
+  autoscaling_min_capacity = try(var.ecs_services_config[each.key].min_capacity, 1)
+  autoscaling_max_capacity = try(var.ecs_services_config[each.key].max_capacity, 1)
+
+  autoscaling_policies = {
+    cpu = {
+      policy_type = "TargetTrackingScaling"
+      target_value = try(var.ecs_services_config[each.key].autoscaling_target, 60)
+
+      target_tracking_scaling_policy_configuration = {
+        predefined_metric_specification = {
+          predefined_metric_type = "ECSServiceAverageCPUUtilization"
+        }
+      }
+    }
+    memory = {
+      policy_type = "TargetTrackingScaling"
+      target_value = try(var.ecs_services_config[each.key].autoscaling_target, 60)
+
+      target_tracking_scaling_policy_configuration = {
+        predefined_metric_specification = {
+          predefined_metric_type = "ECSServiceAverageMemoryUtilization"
+        }
+      }
+    }
+  }
 
   enable_execute_command = true
 
