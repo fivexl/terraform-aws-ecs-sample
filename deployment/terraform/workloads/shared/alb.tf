@@ -1,5 +1,6 @@
 locals {
   private_subnets = [data.aws_subnets.private.ids[0], data.aws_subnets.private.ids[1]]
+  public_subnets  = [data.aws_subnets.public.ids[0], data.aws_subnets.public.ids[1]]
 }
 
 module "ingress_alb" {
@@ -7,10 +8,11 @@ module "ingress_alb" {
   version            = "9.9.0"
 
   name               = "services"
-  internal           = true
   load_balancer_type = "application"
   vpc_id             = data.aws_vpc.this.id
-  subnets            = local.private_subnets
+
+  internal           = false
+  subnets            = local.public_subnets
 
   create_security_group = true
   security_group_name   = "alb"
