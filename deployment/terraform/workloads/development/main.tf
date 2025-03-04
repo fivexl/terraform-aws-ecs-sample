@@ -50,7 +50,7 @@ module "workloads" {
     performance_insights_retention_period = 7
     enchanced_monitoring_interval         = 60
     multi_az                              = false
-    max_allocated_storage                 = 500
+    max_allocated_storage                 = 100
   }
 
   tags = {
