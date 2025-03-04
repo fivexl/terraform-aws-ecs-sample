@@ -1,6 +1,9 @@
 locals {
   private_subnets = [data.aws_subnets.private.ids[0], data.aws_subnets.private.ids[1]]
   public_subnets  = [data.aws_subnets.public.ids[0], data.aws_subnets.public.ids[1]]
+  alb = {
+    name = "alb-services"
+  }
 }
 
 module "ingress_alb" {
@@ -15,7 +18,10 @@ module "ingress_alb" {
   subnets            = local.public_subnets
 
   create_security_group = true
-  security_group_name   = "alb"
+  security_group_name   = local.alb.name
+  security_group_tags = {
+    Name = local.alb.name
+  }
   security_group_ingress_rules = {
     all_http = {
       from_port   = local.alb_http_port
