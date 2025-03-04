@@ -23,33 +23,14 @@ module "elasticache" {
   vpc_id = data.aws_vpc.this.id
   security_group_rules = {
     ingress_vpc = {
-      # Default type is `ingress`
-      # Default port is based on the default engine port
       description = "VPC traffic"
       cidr_ipv4   = data.aws_vpc.this.cidr_block
     }
   }
-
-  # Subnet Group
-#   subnet_group_name        = local.name
-#   subnet_group_description = "${title(local.name)} subnet group"
   subnet_ids               = local.private_subnets
-
-  # Parameter Group
-#   create_parameter_group      = true
-# #   parameter_group_name        = local.name
-#   parameter_group_family      = "redis7"
-#   parameters = [
-#     {
-#       name  = "latency-tracking"
-#       value = "yes"
-#     }
-#   ]
 
   tags = module.tags.result
 }
-
-# # create redis user
 
 resource "aws_elasticache_user" "this" {
   user_id       = "vote"

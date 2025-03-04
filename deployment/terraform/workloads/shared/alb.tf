@@ -87,7 +87,6 @@ module "ingress_alb" {
   }
 
   target_groups = { 
-    # { for key, value in local.services : key => value if try(value.domain_name, "") != "" }
     for key, value in local.services : key => {
       name                 = key
       protocol             = "HTTP"
