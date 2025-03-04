@@ -18,7 +18,7 @@ module "ecs_service" {
       image = "${(
         var.create_ecr_resources ? 
         "${aws_ecr_repository.this[each.key].repository_url}"
-        : "${var.dev_account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${each.key}"
+        : "${var.ecr_account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${each.key}"
       )}:${each.value.image_version}"
 
       readonly_root_filesystem  = false

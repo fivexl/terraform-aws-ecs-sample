@@ -75,7 +75,7 @@ variable "ecr_image_version" {
   default     = ""
 }
 
-variable "dev_account_id" {
+variable "ecr_account_id" {
   description = "The account ID of the development account"
   type        = string
   default     = ""
