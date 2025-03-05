@@ -31,7 +31,7 @@ module "db" {
   max_allocated_storage = var.db.max_allocated_storage
   ca_cert_identifier = "rds-ca-ecc384-g1"
 
-  username                                               = "postgres"
+  username                                               = "postgres_admin"
   iam_database_authentication_enabled                    = true
   manage_master_user_password                            = true
   manage_master_user_password_rotation                   = false # TODO: enable if application supports it
