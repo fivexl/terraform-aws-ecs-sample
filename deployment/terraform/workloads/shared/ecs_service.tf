@@ -7,34 +7,49 @@ module "ecs_service" {
   name        = each.key
   cluster_arn = module.ecs_cluster.cluster_arn
 
-  cpu    = try(var.ecs_services_config[each.key].cpu, 256)
-  memory = try(var.ecs_services_config[each.key].memory, 512)
-  desired_count = try(var.ecs_services_config[each.key].desired_count, 1)
+  cpu                      = try(var.ecs_services_config[each.key].cpu, 256)
+  memory                   = try(var.ecs_services_config[each.key].memory, 512)
+  desired_count            = try(var.ecs_services_config[each.key].desired_count, 1)
   autoscaling_min_capacity = try(var.ecs_services_config[each.key].min_capacity, 1)
   autoscaling_max_capacity = try(var.ecs_services_config[each.key].max_capacity, 1)
 
-  autoscaling_policies = {
-    cpu = {
-      policy_type = "TargetTrackingScaling"
-      target_value = try(var.ecs_services_config[each.key].autoscaling_target, 60)
+  autoscaling_policies = merge(
+    {
+      cpu = {
+        policy_type  = "TargetTrackingScaling"
+        target_value = try(var.ecs_services_config[each.key].autoscaling_target, 60)
 
-      target_tracking_scaling_policy_configuration = {
-        predefined_metric_specification = {
-          predefined_metric_type = "ECSServiceAverageCPUUtilization"
+        target_tracking_scaling_policy_configuration = {
+          predefined_metric_specification = {
+            predefined_metric_type = "ECSServiceAverageCPUUtilization"
+          }
         }
       }
-    }
-    memory = {
-      policy_type = "TargetTrackingScaling"
-      target_value = try(var.ecs_services_config[each.key].autoscaling_target, 60)
+      memory = {
+        policy_type  = "TargetTrackingScaling"
+        target_value = try(var.ecs_services_config[each.key].autoscaling_target, 60)
 
-      target_tracking_scaling_policy_configuration = {
-        predefined_metric_specification = {
-          predefined_metric_type = "ECSServiceAverageMemoryUtilization"
+        target_tracking_scaling_policy_configuration = {
+          predefined_metric_specification = {
+            predefined_metric_type = "ECSServiceAverageMemoryUtilization"
+          }
+        }
+      },
+    },
+    try(module.ingress_alb.target_groups[each.key].arn, false) == false ? {} :
+    {
+      requests = {
+        policy_type  = "TargetTrackingScaling"
+        target_value = try(var.ecs_services_config[each.key].requests_per_target, 1000)
+
+        target_tracking_scaling_policy_configuration = {
+          predefined_metric_specification = {
+            predefined_metric_type = "ALBRequestCountPerTarget"
+            resource_label         = "${module.ingress_alb.arn_suffix}/${module.ingress_alb.target_groups[each.key].arn_suffix}"
+          }
         }
       }
-    }
-  }
+  })
 
   enable_execute_command = true
 
@@ -42,12 +57,13 @@ module "ecs_service" {
     "${each.key}" = {
       essential = true
       image = "${(
-        var.create_ecr_resources ? 
+        var.create_ecr_resources ?
         "${aws_ecr_repository.this[each.key].repository_url}"
         : "${var.ecr_account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${each.key}"
       )}:${each.value.image_version}"
 
-      readonly_root_filesystem  = false
+      readonly_root_filesystem = false
+      # TODO: user = "1000:1000"  # Run as non-root user (UID:GID)
 
       # usefull when you need to apply changes when application is broken
       # wait_for_steady_state     = false
@@ -126,7 +142,7 @@ module "ecs_service" {
     }
   }
 
-  depends_on = [ module.ingress_alb ]
+  depends_on = [module.ingress_alb]
 }
 
 resource "aws_security_group_rule" "ingress" {
