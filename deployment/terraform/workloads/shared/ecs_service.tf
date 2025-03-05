@@ -66,10 +66,10 @@ module "ecs_service" {
 
       health_check = {
         command     = ["CMD-SHELL", "curl -f http://localhost:${each.value.port}${each.value.health_check_path} || exit 1"]
-        interval    = 60
-        timeout     = 20
-        retries     = 10
-        startPeriod = 180
+        interval    = 15
+        timeout     = 5
+        retries     = 3
+        startPeriod = 30
       }
 
       environment = concat([

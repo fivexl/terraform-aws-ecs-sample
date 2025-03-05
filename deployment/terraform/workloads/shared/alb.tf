@@ -103,12 +103,12 @@ module "ingress_alb" {
 
       health_check = {
         enabled             = true
-        interval            = 120
         path                = value.health_check_path
         port                = "traffic-port"
+        interval            = 15
         healthy_threshold   = 2
         unhealthy_threshold = 3
-        timeout             = 20
+        timeout             = 5
         protocol            = "HTTP"
         matcher             = "200-399"
       }
