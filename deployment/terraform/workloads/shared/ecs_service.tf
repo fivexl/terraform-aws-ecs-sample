@@ -63,7 +63,7 @@ module "ecs_service" {
       )}:${each.value.image_version}"
 
       readonly_root_filesystem = false
-      # TODO: user = "1000:1000"  # Run as non-root user (UID:GID)
+      user = "1000:1000"  # Run as non-root user (UID:GID)
 
       # usefull when you need to apply changes when application is broken
       # wait_for_steady_state     = false
