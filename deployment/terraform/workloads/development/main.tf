@@ -23,7 +23,7 @@ module "workloads" {
   allow_ecr_get_for_account_ids = []
   vpc_id                        = "vpc-0618018ee2bdea049"
   dns_zone_name                 = "fivexl.dev"
-  ecr_image_version             = "v0.13"
+  ecr_image_version             = "v0.15"
   create_ecr_resources = true
   vpc = {
     name = "apps"

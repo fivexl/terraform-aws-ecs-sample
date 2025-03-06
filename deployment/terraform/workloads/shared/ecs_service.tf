@@ -73,7 +73,7 @@ module "ecs_service" {
         : "${var.ecr_account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${each.key}"
       )}:${each.value.image_version}"
 
-      readonly_root_filesystem = false
+      readonly_root_filesystem = true
       user = "1000:1000"  # Run as non-root user (UID:GID)
 
       # usefull when you need to apply changes when application is broken

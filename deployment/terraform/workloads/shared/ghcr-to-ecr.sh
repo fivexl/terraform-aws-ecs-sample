@@ -10,9 +10,9 @@ aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS 
 
 # Define image sources and destinations using a normal array
 IMAGES=(
-  "ghcr.io/fivexl/n-example-voting-app-result:after result:v0.13"
-  "ghcr.io/fivexl/n-example-voting-app-worker:latest worker:v0.13"
-  "ghcr.io/fivexl/n-example-voting-app-vote:after vote:v0.13"
+  "ghcr.io/fivexl/n-example-voting-app-result:after result:v0.15"
+  "ghcr.io/fivexl/n-example-voting-app-worker:latest worker:v0.15"
+  "ghcr.io/fivexl/n-example-voting-app-vote:after vote:v0.15"
 )
 
 # Pull, tag, and push images
