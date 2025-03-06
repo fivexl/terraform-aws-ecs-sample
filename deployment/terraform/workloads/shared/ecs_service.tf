@@ -7,6 +7,17 @@ module "ecs_service" {
   name        = each.key
   cluster_arn = module.ecs_cluster.cluster_arn
 
+  capacity_provider_strategy = [
+    {
+      capacity_provider = "FARGATE"
+      weight = 100
+    },
+    {
+      capacity_provider = "FARGATE_SPOT"
+      weight = 0
+    }
+  ]
+
   cpu                      = try(var.ecs_services_config[each.key].cpu, 256)
   memory                   = try(var.ecs_services_config[each.key].memory, 512)
   desired_count            = try(var.ecs_services_config[each.key].desired_count, 1)

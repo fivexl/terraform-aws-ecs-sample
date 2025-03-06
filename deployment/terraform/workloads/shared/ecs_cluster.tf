@@ -28,6 +28,12 @@ module "ecs_cluster" {
         base   = 0
       }
     }
+    FARGATE = {
+      default_capacity_provider_strategy = {
+        weight = 100
+        base   = 100
+      }
+    }
   }
 
   tags = module.tags.result
