@@ -14,8 +14,6 @@ locals {
         DB_NAME     = aws_ssm_parameter.db["/infrastructure/db/${local.rds.identifier}/DB_NAME"].arn
         DB_PASSWORD = "${module.db.db_instance_master_user_secret_arn}:password::"
         DB_USER     = "${module.db.db_instance_master_user_secret_arn}:username::"
-
-        REDIS_HOST  = aws_ssm_parameter.elasticache["/infrastructure/elasticache/${local.elasticache.identifier}/HOST"].arn
       }
 
       environment = {
@@ -59,6 +57,7 @@ locals {
 
       tasks_iam_role_statements = []
       enable_db_access          = true
+      enable_redis_access       = true
     }
     vote = {
       domain_name       = "vote"
@@ -84,6 +83,7 @@ locals {
 
       tasks_iam_role_statements = []
       enable_db_access          = true
+      enable_redis_access       = true
     }
   }
   alb_http_port  = 80

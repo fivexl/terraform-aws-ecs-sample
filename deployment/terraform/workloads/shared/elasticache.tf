@@ -1,4 +1,3 @@
-
 locals {
   elasticache = {
     identifier = "vote"
@@ -23,10 +22,14 @@ module "elasticache" {
   port = local.elasticache.port
   vpc_id = data.aws_vpc.this.id
   security_group_rules = {
-    ingress_vpc = {
-      description = "VPC traffic"
-      cidr_ipv4   = data.aws_vpc.this.cidr_block
-    }
+      for key, value in local.services : key => {
+        type                          = "ingress"
+        from_port                     = local.elasticache.port
+        to_port                       = local.elasticache.port
+        ip_protocol                   = "tcp"
+        description                   = "ECS: ${key} service access to ElastiCache: ${local.elasticache.identifier}"
+        referenced_security_group_id  = module.ecs_service[key].security_group_id
+      } if try(value.enable_redis_access, false)
   }
   subnet_ids               = local.private_subnets
 
