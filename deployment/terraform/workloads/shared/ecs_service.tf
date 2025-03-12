@@ -99,15 +99,28 @@ module "ecs_service" {
         startPeriod = 30
       }
 
-      environment = concat([
-        for key, value in try(each.value.environment, []) : {
-          name  = key
-          value = value
-        }
+      environment = concat(
+        [
+          for key, value in try(each.value.environment, []) : {
+            name  = key
+            value = value
+          }
         ],
         [{
           name  = try(each.value.port_env_var_name, "PORT")
           value = "${each.value.port}"
+        }],
+        [{
+            name  = "PGAPPNAME"
+            value = each.key
+        }],
+        [{
+          name  = "IMAGE_VERSION"
+          value = "${(
+            var.create_ecr_resources ?
+            "${aws_ecr_repository.this[each.key].repository_url}"
+            : "${var.ecr_account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${each.key}"
+          )}:${each.value.image_version}"
         }]
       )
       secrets = [
