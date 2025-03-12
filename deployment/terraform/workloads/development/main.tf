@@ -53,6 +53,14 @@ module "workloads" {
     max_allocated_storage                 = 100
   }
 
+  elasticache = {
+    apply_immediately = true
+    auto_minor_version_upgrade = true
+    snapshot_retention_limit = 1
+    node_type = "cache.t2.micro"
+    engine_version = "8.0"
+  }
+
   tags = {
     environment_name = "development"
     environment_type = "workloads"

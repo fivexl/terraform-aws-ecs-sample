@@ -86,3 +86,14 @@ variable "ecs_services_config" {
   type = map
   default = {}
 }
+
+variable "elasticache" {
+  description = "Elasticache configuration"
+  type = object({
+    apply_immediately = bool
+    auto_minor_version_upgrade = bool
+    snapshot_retention_limit = number
+    node_type = string
+    engine_version = string
+  })
+}

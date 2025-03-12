@@ -13,11 +13,8 @@ module "elasticache" {
   create_replication_group = true
 
   engine         = "valkey"
-  engine_version = "8.0"
-  node_type      = "cache.t2.micro" # free tier
-
-  maintenance_window = "Mon:05:00-Mon:06:00"
-  apply_immediately  = true
+  engine_version = var.elasticache.engine_version
+  node_type      = var.elasticache.node_type
 
   port = local.elasticache.port
   vpc_id = data.aws_vpc.this.id
@@ -32,6 +29,13 @@ module "elasticache" {
       } if try(value.enable_redis_access, false)
   }
   subnet_ids               = local.private_subnets
+
+  apply_immediately = var.elasticache.apply_immediately
+  auto_minor_version_upgrade = var.elasticache.auto_minor_version_upgrade
+
+  snapshot_retention_limit = var.elasticache.snapshot_retention_limit
+  snapshot_window          = "04:00-05:00"
+  maintenance_window       = "Mon:05:00-Mon:06:00"
 
   tags = module.tags.result
 }
