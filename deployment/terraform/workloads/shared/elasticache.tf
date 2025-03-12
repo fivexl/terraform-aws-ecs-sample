@@ -9,11 +9,12 @@ locals {
 module "elasticache" {
   source = "terraform-aws-modules/elasticache/aws"
 
-  cluster_id               = "vote"
-  create_cluster           = true
-  create_replication_group = false
+  replication_group_id     = "vote"
+  create_cluster           = false
+  create_replication_group = true
 
-  engine_version = "7.1"
+  engine         = "valkey"
+  engine_version = "8.0"
   node_type      = "cache.t2.micro" # free tier
 
   maintenance_window = "Mon:05:00-Mon:06:00"
@@ -51,7 +52,7 @@ resource "aws_elasticache_user_group" "this" {
 
 resource "aws_ssm_parameter" "elasticache" {
   for_each = {
-    "/infrastructure/elasticache/${local.elasticache.identifier}/HOST" = module.elasticache.cluster_cache_nodes[0].address #  jsonencode(module.elasticache.this.cache_nodes[0].address)
+    "/infrastructure/elasticache/${local.elasticache.identifier}/HOST" = module.elasticache.replication_group_primary_endpoint_address
   }
 
   name        = each.key
