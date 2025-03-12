@@ -40,23 +40,6 @@ module "elasticache" {
   tags = module.tags.result
 }
 
-resource "aws_elasticache_user" "this" {
-  user_id       = "vote"
-  user_name     = "vote"
-  # allow all access
-  access_string = "on ~* +@all"
-  engine        = "REDIS"
-
-  passwords     = ["password123456789"]
-}
-
-resource "aws_elasticache_user_group" "this" {
-  user_group_id   = "vote"
-
-  engine        = "REDIS"
-  user_ids        = ["default", aws_elasticache_user.this.user_id]
-}
-
 resource "aws_ssm_parameter" "elasticache" {
   for_each = {
     "/infrastructure/elasticache/${local.elasticache.identifier}/HOST" = module.elasticache.replication_group_primary_endpoint_address
