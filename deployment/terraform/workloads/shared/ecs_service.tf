@@ -92,7 +92,7 @@ module "ecs_service" {
       enable_cloudwatch_logging = true
 
       health_check = {
-        command     = ["CMD-SHELL", "curl -f http://localhost:${each.value.port}${each.value.health_check_path} || exit 1"]
+        command     = [ "CMD", "lprobe", "-port=${each.value.port}", "-endpoint=${each.value.health_check_path}"]
         interval    = 15
         timeout     = 5
         retries     = 3
