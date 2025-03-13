@@ -85,6 +85,19 @@ locals {
       enable_db_access          = true
       enable_redis_access       = true
     }
+    gateway = {
+      domain_name       = "gateway"
+      port              = 8080
+      health_check_path = "/health"
+      ingress_from      = []
+      priority          = 4
+
+      image_version = var.ecr_image_version != "" ? var.ecr_image_version : data.external.git_repository.result.commit_sha
+
+      environment = {
+        XDG_DATA_HOME = "/tmp"
+      }
+    }
   }
   alb_http_port  = 80
   alb_https_port = 443
