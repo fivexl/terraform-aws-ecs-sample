@@ -47,7 +47,7 @@ module "ecs_service" {
         }
       },
     },
-    try(module.ingress_alb.target_groups[each.key].arn, false) == false ? {} :
+    try(each.value.domain_name, "") == "" ? {} :
     {
       requests = {
         policy_type  = "TargetTrackingScaling"
