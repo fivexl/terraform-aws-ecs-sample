@@ -4,7 +4,7 @@ locals {
       domain_name       = "result"
       port              = 8080
       health_check_path = "/health"
-      ingress_from      = []
+      ingress_from      = ["gateway"]
       priority          = 1
 
       image_version = var.ecr_image_version != "" ? var.ecr_image_version : data.external.git_repository.result.commit_sha
@@ -63,7 +63,7 @@ locals {
       domain_name       = "vote"
       port              = 8080
       health_check_path = "/health"
-      ingress_from      = []
+      ingress_from      = ["gateway"]
       priority          = 3
 
       image_version = var.ecr_image_version != "" ? var.ecr_image_version : data.external.git_repository.result.commit_sha
