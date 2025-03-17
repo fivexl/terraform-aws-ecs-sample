@@ -132,6 +132,27 @@ module "ecs_service" {
     }
   }
 
+  service_connect_configuration = {
+    enabled   = true
+    namespace = aws_service_discovery_private_dns_namespace.services.arn
+    log_configuration = {
+      log_driver = "awslogs"
+      options = {
+        awslogs-region        = data.aws_region.current.name
+        awslogs-group         = "/aws/ecs/${each.key}/${each.key}"
+        awslogs-stream-prefix = "/ecs-connect"
+      }
+    }
+    service = {
+      client_alias = {
+        port     = each.value.port
+        dns_name = "${each.key}.services"
+      }
+      port_name      = "app"
+      discovery_name = each.key
+    }
+  }
+
   task_exec_iam_statements = [
     {
       # Allow ECS to decrypt secrets
