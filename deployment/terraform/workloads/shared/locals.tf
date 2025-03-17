@@ -86,7 +86,7 @@ locals {
       enable_redis_access       = true
     }
     gateway = {
-      domain_name       = "gateway"
+      domain_name       = "ecs-demo"
       port              = 8080
       health_check_path = "/health"
       ingress_from      = []
