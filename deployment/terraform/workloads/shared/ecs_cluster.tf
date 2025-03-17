@@ -1,7 +1,11 @@
+locals {
+  cluster_name = "services"
+}
+
 module "ecs_cluster" {
   source = "terraform-aws-modules/ecs/aws"
 
-  cluster_name = "services"
+  cluster_name = local.cluster_name
 
   cluster_settings = [
     {
@@ -15,7 +19,7 @@ module "ecs_cluster" {
       logging = "OVERRIDE"
       log_configuration = {
         s3_bucket_name = module.naming_conventions.s3_access_logs_bucket_name
-        s3_key_prefix  = "ecs/exec/services/"
+        s3_key_prefix  = "ecs/exec/${local.cluster_name}/"
       }
     }
   }
@@ -23,7 +27,6 @@ module "ecs_cluster" {
   fargate_capacity_providers = {
     FARGATE_SPOT = {
       default_capacity_provider_strategy = {
-        # TODO: add non-spot fargate capacity provider and use it in production
         weight = 0
         base   = 0
       }
