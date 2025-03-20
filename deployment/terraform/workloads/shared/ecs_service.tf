@@ -73,7 +73,7 @@ module "ecs_service" {
         : "${var.ecr_account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${each.key}"
       )}:${each.value.image_version}"
 
-      readonly_root_filesystem = true
+      readonly_root_filesystem = false # Necessary for ECS Exec TODO: remove
       user = "1000:1000"  # Run as non-root user (UID:GID)
 
       # usefull when you need to apply changes when application is broken
@@ -227,4 +227,15 @@ resource "aws_security_group_rule" "alb" {
   protocol                 = "tcp"
   security_group_id        = module.ecs_service[each.key].security_group_id
   source_security_group_id = module.ingress_alb.security_group_id
+}
+
+# TODO: make this optional
+data "aws_iam_policy" "ssm_managed_instance_core" {
+  arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_managed_instance_core" {
+  for_each   = module.ecs_service
+  role       = each.value.tasks_iam_role_name
+  policy_arn = data.aws_iam_policy.ssm_managed_instance_core.arn
 }
