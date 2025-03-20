@@ -150,6 +150,13 @@ module "ecs_service" {
       }
       port_name      = "app"
       discovery_name = each.key
+
+      tls = {
+        role_arn = module.tls_role.iam_role_arn
+        issuer_cert_authority = {
+          aws_pca_authority_arn = data.aws_ram_resource_share.pca.resource_arns[0]
+        }
+      }
     }
   }
 

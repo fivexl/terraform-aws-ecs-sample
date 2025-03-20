@@ -58,3 +58,9 @@ data "aws_route53_zone" "primary_public" {
 data "external" "git_repository" {
   program = ["bash", "-c", "echo { \\\"commit_sha\\\": \\\"$(git rev-parse HEAD)\\\" }"]
 }
+
+data "aws_ram_resource_share" "pca" {
+  name                  = "ecs-private-ca"
+  resource_owner        = "OTHER-ACCOUNTS"
+  resource_share_status = "ACTIVE"
+}
