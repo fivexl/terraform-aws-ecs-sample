@@ -75,7 +75,7 @@ module "ingress_alb" {
         status_code  = "503"
       }
 
-      rules = {
+      rules = merge({
         for key, value in local.services : key => {
           priority = value.priority
           actions = [{
@@ -88,7 +88,22 @@ module "ingress_alb" {
             }
           }]
         } if try(value.domain_name, "") != ""
-      }
+      },
+      # Everything else to gateway
+      {
+        star-gateway = {
+        priority = length(local.services) + 1
+        actions = [{
+          type             = "forward"
+          target_group_key = "gateway"
+        }]
+        conditions = [{
+          host_header = {
+            values = [ "*.${data.aws_route53_zone.primary_public.name}" ]
+          }
+        }]
+      }}
+      )
     }
   }
 
