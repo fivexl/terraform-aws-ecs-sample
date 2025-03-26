@@ -95,7 +95,7 @@ module "ingress_alb" {
   target_groups = { 
     for key, value in local.services : key => {
       name                 = key
-      protocol             = "HTTP"
+      protocol             = "HTTPS"
       port                 = value.port
       target_type          = "ip"
       deregistration_delay = 10
@@ -109,7 +109,7 @@ module "ingress_alb" {
         healthy_threshold   = 2
         unhealthy_threshold = 3
         timeout             = 5
-        protocol            = "HTTP"
+        protocol            = "HTTPS" # S
         matcher             = "200-399"
       }
     } if try(value.domain_name, "") != ""
