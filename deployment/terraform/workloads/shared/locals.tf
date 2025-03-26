@@ -1,7 +1,7 @@
 locals {
   services = {
     result = {
-      domain_name       = "result"
+      domain_name       = "directresult"
       port              = 8080
       health_check_path = "/health"
       ingress_from      = ["gateway"]
@@ -17,9 +17,9 @@ locals {
       }
 
       environment = {
-        PGSSLMODE = "require"
         DB_PORT   = 5432
 
+        PGSSLMODE = "require"
         NODE_TLS_REJECT_UNAUTHORIZED = "0"
       }
 
@@ -60,7 +60,7 @@ locals {
       enable_redis_access       = true
     }
     vote = {
-      domain_name       = "vote"
+      domain_name       = "directvote"
       port              = 8080
       health_check_path = "/health"
       ingress_from      = ["gateway"]
@@ -89,13 +89,14 @@ locals {
       domain_name       = "ecs-demo"
       port              = 8080
       health_check_path = "/health"
-      ingress_from      = []
+      ingress_from      = ["result", "vote"]
       priority          = 4
 
       image_version = var.ecr_image_version != "" ? var.ecr_image_version : data.external.git_repository.result.commit_sha
 
       environment = {
         XDG_DATA_HOME = "/tmp"
+        DOMAIN = "fivexl.dev"
       }
     }
   }
