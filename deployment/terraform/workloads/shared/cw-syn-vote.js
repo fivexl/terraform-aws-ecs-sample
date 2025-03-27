@@ -16,9 +16,16 @@ const recordedScript = async function () {
   
   await page.setViewport({ width: 1710, height: 981 })
   
+  // Randomly choose between dogs (a) and cats (b)
+  const voteForDogs = Math.random() < 0.5;
+  const selector = voteForDogs ? 
+    'body > #content-container > #content-container-center #a' : 
+    'body > #content-container > #content-container-center #b';
+  
   await synthetics.executeStep('Click_1', async function() {
-    await page.waitForSelector('body > #content-container > #content-container-center #b')
-    await page.click('body > #content-container > #content-container-center #b')
+    await page.waitForSelector(selector)
+    await page.click(selector)
+    log.info(`Voted for ${voteForDogs ? 'dogs' : 'cats'}`)
   })
   
   await navigationPromise
