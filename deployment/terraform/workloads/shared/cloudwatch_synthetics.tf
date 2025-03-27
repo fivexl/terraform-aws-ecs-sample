@@ -1,8 +1,24 @@
+module "cloudwatch_synthetics_results_bucket" {
+  source = "./s3_baseline"
+  
+  # TODO: use original module when 1.2.4 is released
+  # source = "fivexl/account-baseline/aws//modules/s3_baseline"
+  # version   = "1.2.3"
+
+  logging = {
+    target_bucket = module.naming_conventions.s3_access_logs_bucket_name
+  }
+  attach_deny_incorrect_encryption_headers = false
+  bucket_name = module.naming_conventions.names["cw-synthetics-results"]
+
+  tags = module.tags.result
+}
+
 locals {
     cw_syn_vote = {
         name = "vote"
-        artifact_s3_name = "cw-syn-results-471112922998-us-east-1"
-        artifact_s3_path = "canary/us-east-1/test-0af-ab37c9f3b825"
+        artifact_s3_name = module.naming_conventions.names["cw-synthetics-results"]
+        artifact_s3_path = "canary"
         script_file_path = "../shared/cw-syn-vote.js"
     }
 }
@@ -125,7 +141,9 @@ module "canary_role" {
   role_name = "CloudWatchSyntheticsRole"
   role_description = "Role for CloudWatch Synthetics"
 
+  number_of_custom_role_policy_arns = 1
   custom_role_policy_arns = [aws_iam_policy.canary_policy.arn]
   role_requires_mfa = false
+  create_role = true
   trusted_role_services = ["lambda.amazonaws.com"]
 }
