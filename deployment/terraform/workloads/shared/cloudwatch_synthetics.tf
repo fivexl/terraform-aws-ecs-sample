@@ -33,7 +33,7 @@ resource "aws_synthetics_canary" "vote" {
   tags                 = module.tags.result
 
   schedule {
-    expression = "rate(1 minute)"
+    expression = "rate(5 minutes)"
   }
 
 run_config {
