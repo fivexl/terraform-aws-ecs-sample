@@ -1,8 +1,10 @@
 module "ecs_service" {
   for_each = local.services
 
-  source  = "terraform-aws-modules/ecs/aws//modules/service"
-  version = "5.11.3"
+  # TODO: switch to the official module after the PR is merged (TLS support)
+  # source  = "terraform-aws-modules/ecs/aws//modules/service"
+  # version = "5.11.3"
+  source = "github.com/fivexl/terraform-aws-ecs.git//modules/service?ref=3837afb8a6807af418a0819fc4edbf2dbe8ab6e3"
 
   name        = each.key
   cluster_arn = module.ecs_cluster.cluster_arn
