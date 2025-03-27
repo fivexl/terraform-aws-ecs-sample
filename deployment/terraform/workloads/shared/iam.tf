@@ -11,6 +11,8 @@ module "tls_role" {
   custom_role_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSInfrastructureRolePolicyForServiceConnectTransportLayerSecurity"]
 
   trusted_role_services = ["ecs.amazonaws.com", "ecs-tasks.amazonaws.com"]
+
+  tags = module.tags.result
 }
 
 resource "aws_iam_policy" "ci_tf" {
